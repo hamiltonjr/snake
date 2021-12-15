@@ -2,6 +2,7 @@
 let canvas = document.getElementById('snake'); 
 let context = canvas.getContext('2d');
 let box = 32;
+let pontos = 0;
 
 // declara cobrinha como lista, já que ela vai ser uma 
 // série de coordenadas, que quando pintadas, criam os 
@@ -33,6 +34,27 @@ function criarBG() {
 
 }
 
+
+// mostra os pontos no canvas
+function mostraPlacar() {
+
+    context.font='25px arial';
+    context.lineWidth=2;
+    context.fillStyle = 'red';
+    context.fillText('Pontos: ' + pontos, 20, 20);
+
+}
+
+
+// finaliza o jogo com a frase Game Over
+function gameOver() {
+
+    context.font='50px arial';
+    context.lineWidth=2;
+    context.fillStyle = 'red';
+    context.fillText('GAME OVER', 50, 50);
+
+}
 
 // renderiza a cobrinha no canvas
 function criarCobrinha () {
@@ -76,13 +98,15 @@ function update(event) {
 // inicia jogo
 function iniciarJogo() {
 
+    // verifica colisão da cobrinha com o corpo
     for (i = 1; i < snake.length; i++){
         if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
             clearInterval(jogo);
-            alert('Game Over :(');
+            alert('GAME OVER');
         }
     }
 
+    // muda direção da cobrinha de acordo com as setas
     if(snake[0].x > 15*box && direction == "right") 
         snake[0].x = 0;
     if(snake[0].x < 0 && direction == 'left') 
@@ -92,7 +116,9 @@ function iniciarJogo() {
     if(snake[0].y < 0 && direction == 'up') 
         snake[0].y = 15*box;
 
+    // ação do jogo
     criarBG();
+    mostraPlacar();
     criarCobrinha();
     drawFood();
 
@@ -110,12 +136,13 @@ function iniciarJogo() {
     if (direction == 'down') 
         snakeY += box;
     
-    // verifica se cobrinha trombou com o seu próprio corpo
+    // verifica se cobrinha pegou a comida
     if (snakeX != food.x || snakeY != food.y) {
         snake.pop(); //pop tira o último elemento da lista
     } else {
         food.x = Math.floor(Math.random() * 15 +1) * box;
         food.y = Math.floor(Math.random() * 15 +1) * box;
+        pontos += 10;
     }
 
     // atualiza posição da cabeça da cobrinha
@@ -129,4 +156,4 @@ function iniciarJogo() {
 
 
 // controla velocidade do jogo
-let jogo = setInterval(iniciarJogo, 100);
+let jogo = setInterval(iniciarJogo, 200);
